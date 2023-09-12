@@ -1,0 +1,22 @@
+/* navigation.css */
+.horizontal-navigation ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-evenly;
+  padding: 0;
+}
+
+.horizontal-navigation li {
+  margin: 0;
+  padding: 20px;
+}
+.horizontal-navigation li:hover {
+  background-color: #3498db; /* Replace with your desired background color */
+  text-decoration: none;
+  cursor: pointer;
+
+}
+.horizontal-navigation li:hover a {
+  color: white; /* Change the text color to white on hover */
+  text-decoration: none;
+}
