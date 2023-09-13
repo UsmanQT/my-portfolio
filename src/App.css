@@ -34,6 +34,27 @@ header {
   
   /* Contact.css */
   .contact {
-    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+  }
+
+  .aboutme {
+    margin-left: 20%;
+    margin-right: 18.5%;
   }
   
+  .horizontal-items-contact ul {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    text-decoration: none;
+    justify-content: space-evenly;
+    padding: 0;
+  }
+  
+  .horizontal-items-contact  li {
+    margin: 0;
+    padding: 20px;
+    text-decoration: none;
+  }

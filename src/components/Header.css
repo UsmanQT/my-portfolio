@@ -5,6 +5,14 @@ header {
     align-items: center;
     padding: 20px;
   }
+
+footer {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+
+  }
   
   .avatar-container {
     width: 200px;

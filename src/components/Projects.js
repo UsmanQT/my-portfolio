@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import './Project.css'; 
 
 const projects = [
   {
@@ -28,21 +29,41 @@ const projects = [
 ];
 
 function Projects() {
-  return (
-    <section id="projects" className="projects">
-      <h2>Projects</h2>
-      <ul>
-        {projects.map((project, index) => (
-          <li key={index}>
-            <h3>{project.title}</h3>
-            <p>Date: {project.date}</p>
-            <p>{project.description}</p>
-            <p>Link: {project.link}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-export default Projects;
+    const [expandedProject, setExpandedProject] = useState(null);
+  
+    const toggleProject = (index) => {
+      if (expandedProject === index) {
+        setExpandedProject(null);
+      } else {
+        setExpandedProject(index);
+      }
+    };
+  
+    return (
+      <section id="projects" className="projects">
+        <h2>Projects</h2>
+        <ul>
+          {projects.map((project, index) => (
+            <li key={index}>
+              <div
+                className={`project-card ${expandedProject === index ? 'expanded' : ''}`}
+                onClick={() => toggleProject(index)}
+              >
+                <h3>{project.title}</h3>
+                <p>Date: {project.date}</p>
+              </div>
+              {expandedProject === index && (
+                <div className="project-details">
+                    
+                  <p>{project.description}</p>
+                  <p>Link: {project.link}</p>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
+  
+  export default Projects;
