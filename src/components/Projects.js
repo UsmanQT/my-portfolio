@@ -28,18 +28,19 @@ const projects = [
   // Add more projects here
 ];
 
-const academic_projct = [
+const academic_projects = [
   {
     title: 'Journal App',
     date: 'Sept. 2023 – Present',
     description: 'A mobile application that allows the user to create daily journal entries by uploading pictures or videos and writing text description. The aim of this project is create a product that can help any person stay motivated by listing down their daily activites. The user can also make their journals public to share with other people and view other public journals created by other others.',
-    Link: 'https://github.com/ZachVeenstra/TheTuringTrio'
+    link: 'https://github.com/ZachVeenstra/TheTuringTrio'
   }
 ]
 
 function Projects() {
     const [expandedProject, setExpandedProject] = useState(null);
-  
+    const [expandedAcademicProject, setExpandedAcademicProject] = useState(null);
+
     const toggleProject = (index) => {
       if (expandedProject === index) {
         setExpandedProject(null);
@@ -47,6 +48,16 @@ function Projects() {
         setExpandedProject(index);
       }
     };
+
+    const toggleAcademicProject = (index) => {
+      if (expandedProject === index) {
+        setExpandedAcademicProject(null);
+      } else {
+        setExpandedAcademicProject(index);
+      }
+    };
+
+    
   
     return (
       <section id="projects" className="projects">
@@ -74,16 +85,16 @@ function Projects() {
 
         <h2>Academic Projects</h2>
         <ul>
-          {projects.map((pj, i) => (
+          {academic_projects.map((pj, i) => (
             <li key={i}>
               <div
-                className={`project-card ${expandedProject === i ? 'expanded' : ''}`}
-                onClick={() => toggleProject(i)}
+                className={`project-card ${expandedAcademicProject === i ? 'expanded' : ''}`}
+                onClick={() => toggleAcademicProject(i)}
               >
                 <h3>{pj.title}</h3>
                 <p>Date: {pj.date}</p>
               </div>
-              {expandedProject === i && (
+              {expandedAcademicProject === i && (
                 <div className="project-details">
                     
                   <p>{pj.description}</p>
