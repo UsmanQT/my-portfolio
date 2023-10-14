@@ -78,7 +78,7 @@ function Projects() {
             <li key={i}>
               <div
                 className={`project-card ${expandedProject === i ? 'expanded' : ''}`}
-                onClick={() => toggleProject(index)}
+                onClick={() => toggleProject(i)}
               >
                 <h3>{pj.title}</h3>
                 <p>Date: {pj.date}</p>
