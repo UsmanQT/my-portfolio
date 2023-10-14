@@ -37,6 +37,8 @@ footer {
     font-size: 24px;
     margin-bottom: 5px;
   }
-  
+  .github-button {
+    border: 1px solid white;
+  }
   /* Add any other styling you need for the header content */
   

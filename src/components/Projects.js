@@ -6,13 +6,13 @@ const projects = [
     title: 'Rent a Bike',
     date: 'Jan. 2023 – May. 2023',
     description: 'A bike rental service provider application developed for both the bike owners and the renter. Deployed the app on expo for testing purposes and successfully tested on 5 users.',
-    link: 'Link to the Project "Rent a Bike"',
+    link: 'https://github.com/UsmanQT/rent-a-bike',
   },
   {
     title: 'Audio Hub',
     date: 'Jan. 2023 – May. 2023',
     description: 'Web Application for Exploring and Playing Music. Developed the website using React JS, NodeJS, express JS and backed powered by MongoDB. Deployed the website live on a virtual instance of Google Cloud Platform (GCP).',
-    link: 'Link to the Project'
+    link: 'https://github.com/pramodpalutla/AudioHub'
   },
   {
     title: 'No Waiting App',
@@ -27,6 +27,15 @@ const projects = [
   }
   // Add more projects here
 ];
+
+const academic_projct = [
+  {
+    title: 'Journal App',
+    date: 'Sept. 2023 – Present',
+    description: 'A mobile application that allows the user to create daily journal entries by uploading pictures or videos and writing text description. The aim of this project is create a product that can help any person stay motivated by listing down their daily activites. The user can also make their journals public to share with other people and view other public journals created by other others.',
+    Link: 'https://github.com/ZachVeenstra/TheTuringTrio'
+  }
+]
 
 function Projects() {
     const [expandedProject, setExpandedProject] = useState(null);
@@ -56,7 +65,29 @@ function Projects() {
                 <div className="project-details">
                     
                   <p>{project.description}</p>
-                  <p>Link: {project.link}</p>
+                  <a href={project.link}> Link to {project.title}</a>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <h2>Academic Projects</h2>
+        <ul>
+          {projects.map((pj, i) => (
+            <li key={i}>
+              <div
+                className={`project-card ${expandedProject === i ? 'expanded' : ''}`}
+                onClick={() => toggleProject(index)}
+              >
+                <h3>{pj.title}</h3>
+                <p>Date: {pj.date}</p>
+              </div>
+              {expandedProject === i && (
+                <div className="project-details">
+                    
+                  <p>{pj.description}</p>
+                  <a href={pj.link}> Link to {pj.title}</a>
                 </div>
               )}
             </li>

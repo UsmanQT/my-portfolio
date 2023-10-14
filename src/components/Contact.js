@@ -11,10 +11,9 @@ function Contact() {
         <p>Email: usman.nja.14@gmail.com</p>
         </li>
         <li>
-        <p>LinkedIn: https://www.linkedin.com/in/usman-qureshi-2a0631149/</p>
+        <a href="https://www.linkedin.com/in/usman-qureshi-2a0631149/"> View me on LinkedIn</a>
         </li>
         <li>
-        <p>Cell Number: 616-334-9660</p>
         </li>
       </ul>
     </nav>
