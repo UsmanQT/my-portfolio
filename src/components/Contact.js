@@ -1,4 +1,5 @@
 import React from 'react';
+import '../App.css';
 
 function Contact() {
   return (
@@ -11,7 +12,7 @@ function Contact() {
         <p>Email: usman.nja.14@gmail.com</p>
         </li>
         <li>
-        <a href="https://www.linkedin.com/in/usman-qureshi-2a0631149/"> View me on LinkedIn</a>
+        <a class="linkedin" href="https://www.linkedin.com/in/usman-qureshi-2a0631149/"> View me on LinkedIn</a>
         </li>
         <li>
         </li>

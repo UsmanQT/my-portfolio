@@ -34,11 +34,34 @@ footer {
   
   /* Additional styling for your header content */
   h1 {
-    font-size: 24px;
+    font-size: 30px;
     margin-bottom: 5px;
+  }
+
+  .github-button > a {
+    margin: 2em;
   }
   .github-button {
     border: 1px solid white;
+    border-radius: 0%;
+    background-color: #3498db;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    text-decoration-line: none;
+  }
+
+  .github-button:link { 
+    text-decoration: none; 
+} 
+
+  .github-button:hover {
+    background-color: white;
+    color: #3498db
+  }
+
+  .github-btn {
+    margin:30px;
   }
   /* Add any other styling you need for the header content */
   

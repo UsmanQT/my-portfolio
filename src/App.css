@@ -24,7 +24,7 @@ header {
   
   /* About.css */
   .about {
-    padding: 20px;
+    padding-left: 20px;
   }
   
   /* Projects.css */
@@ -49,7 +49,7 @@ header {
     list-style: none;
     align-items: center;
     text-decoration: none;
-    justify-content: space-evenly;
+    justify-content: center;
     padding: 0;
   }
   
@@ -57,4 +57,8 @@ header {
     margin: 0;
     padding: 20px;
     text-decoration: none;
+  }
+
+  .linkedin {
+    color: white;
   }

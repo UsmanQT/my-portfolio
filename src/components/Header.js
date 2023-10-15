@@ -10,7 +10,8 @@ function Header() {
         <p>Masters in Applied Computer Science</p>
         <p>Grand Valley State University</p>
         <p>Graduate Research Assistant - Full Stack Developer at ACI GVSU</p>
-        <a class="github-button" href="https://github.com/UsmanQT">View me on GitHub</a>
+        <div class="github-btn"><a class="github-button" href="https://github.com/UsmanQT">View me on GitHub</a></div>
+        
       </div>
       <div className="avatar-container">
       <img src={myPic} alt="Avatar" className="avatar-image" />
