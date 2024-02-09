@@ -12,7 +12,7 @@
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1300px) {
   #desktop-nav {
     display: none;
   }
@@ -99,5 +99,23 @@
   }
   .text-container {
     text-align: justify;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .details-contaier{
+    flex: auto;
+  }
+  .details-container-about  {
+    flex: auto;
+  }
+  #projects {
+    margin-top: 0rem;
+  }
+}
+
+@media screen and (max-height: 450px) {
+  #about {
+    margin-top: 15rem;
   }
 }
