@@ -186,6 +186,7 @@ section {
 }
 
 .section__text__p1 {
+  margin-top:2rem;
   text-align: center;
 }
 
@@ -356,6 +357,7 @@ article .icon {
 /* PROJECTS SECTION */
 
 #projects {
+  
   position: relative;
 }
 
