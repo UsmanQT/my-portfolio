@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog | Usman Tahir Qureshi</title>
+    <style>
+      :root {
+        --blog-bg: #0a0e1a;
+        --blog-surface: rgba(255, 255, 255, 0.04);
+        --blog-accent: #00d4ff;
+        --blog-success: #00ff88;
+        --blog-text: #e2e8f0;
+        --blog-muted: #a8b2c1;
+        --blog-border: rgba(0, 212, 255, 0.15);
+        --blog-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        background: var(--blog-bg);
+        color: var(--blog-text);
+        padding: 1.4rem;
+      }
+      .top-nav {
+        max-width: 1120px;
+        margin: 0 auto 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .top-nav a {
+        color: var(--blog-muted);
+        text-decoration: none;
+      }
+      .top-nav a:hover { color: var(--blog-accent); }
+      #blog.blog-section {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 1.4rem;
+        color: var(--blog-text);
+        background: var(--blog-bg);
+        border: 1px solid var(--blog-border);
+        border-radius: 18px;
+        overflow: clip;
+      }
+      #blog .blog-shell { padding: 0.2rem; }
+      #blog .blog-title { font-size: clamp(1.7rem, 2.6vw, 2.5rem); margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+      #blog .blog-subtitle { color: var(--blog-muted); margin-bottom: 1rem; }
+      #blog .blog-card { position: relative; border: 1px solid var(--blog-border); background: var(--blog-surface); backdrop-filter: blur(12px); color: var(--blog-text); border-radius: 14px; overflow: hidden; transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, max-height 0.45s ease, opacity 0.3s ease; max-height: 290px; box-shadow: var(--blog-shadow); }
+      #blog .blog-card.open { max-height: 4000px; border-left: 4px solid var(--blog-accent); }
+      #blog .blog-card.filtered-out { opacity: 0; max-height: 0; margin: 0; padding: 0; border: 0; pointer-events: none; transform: translateY(8px); }
+      #blog .reading-progress { position: sticky; top: 0; left: 0; height: 2px; width: 100%; background: transparent; z-index: 2; display: none; }
+      #blog .blog-card.open .reading-progress { display: block; }
+      #blog .reading-progress > span { display: block; width: 0%; height: 100%; background: var(--blog-accent); box-shadow: 0 0 12px rgba(0, 212, 255, 0.75); transition: width 0.12s linear; }
+      #blog .featured { width: 100%; background: linear-gradient(145deg, rgba(7, 13, 28, 0.95), rgba(11, 17, 34, 0.92)), radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.13), transparent 38%); }
+      #blog .featured::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.22; background-image: radial-gradient(rgba(255, 255, 255, 0.28) 0.5px, transparent 0.5px); background-size: 3px 3px; mix-blend-mode: screen; }
+      #blog .blog-card-inner { position: relative; z-index: 1; padding: 1.1rem 1.1rem 1rem; }
+      #blog .meta-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
+      #blog .category-tag { padding: 0.24rem 0.55rem; border: 1px solid var(--blog-border); border-radius: 999px; font-size: 0.72rem; color: var(--blog-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+      #blog .readtime { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--blog-muted); font-size: 0.78rem; }
+      #blog .clock-icon { width: 12px; height: 12px; border: 1.5px solid var(--blog-muted); border-radius: 50%; position: relative; display: inline-block; }
+      #blog .clock-icon::before, #blog .clock-icon::after { content: ""; position: absolute; background: var(--blog-muted); transform-origin: bottom center; }
+      #blog .clock-icon::before { width: 1px; height: 4px; left: 5px; top: 2px; }
+      #blog .clock-icon::after { width: 3px; height: 1px; left: 5px; top: 5px; }
+      #blog .new-badge { font-size: 0.68rem; font-weight: 700; color: #001a22; background: var(--blog-accent); border-radius: 999px; padding: 0.2rem 0.45rem; box-shadow: 0 0 16px rgba(0, 212, 255, 0.85); animation: pulse-cyan 1.6s infinite ease-in-out; }
+      @keyframes pulse-cyan { 0%, 100% { box-shadow: 0 0 8px rgba(0, 212, 255, 0.7); } 50% { box-shadow: 0 0 18px rgba(0, 212, 255, 1); } }
+      #blog .blog-title-link { display: inline-block; color: var(--blog-text); text-decoration: none; font-weight: 700; line-height: 1.2; background-image: linear-gradient(var(--blog-accent), var(--blog-accent)); background-repeat: no-repeat; background-size: 0% 2px; background-position: 0 100%; transition: background-size 0.3s ease; }
+      #blog .blog-card:hover .blog-title-link { background-size: 100% 2px; }
+      #blog .blog-summary { margin-top: 0.6rem; color: var(--blog-muted); max-width: 80ch; }
+      #blog .blog-expand { margin-top: 0.75rem; max-height: 0; overflow: hidden; transition: max-height 0.45s ease; }
+      #blog .blog-card.open .blog-expand { max-height: 3000px; }
+      #blog .blog-article-content { color: #d8e3f2; line-height: 1.75; font-size: 0.98rem; padding: 0.2rem 0 0.45rem; }
+      #blog .blog-article-content p { margin: 0.65rem 0; }
+      #blog .blog-article-content ul { margin: 0.6rem 0 0.75rem 1.1rem; color: #d8e3f2; }
+      #blog .blog-article-content li { margin: 0.35rem 0; }
+      #blog .blog-controls { display: flex; gap: 0.5rem; margin-top: 0.7rem; align-items: center; }
+      #blog .blog-btn { border: 1px solid var(--blog-border); background: rgba(0, 212, 255, 0.1); color: var(--blog-text); padding: 0.44rem 0.7rem; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.82rem; }
+      #blog .close-btn { margin-left: auto; background: transparent; border: 0; color: var(--blog-muted); font-size: 1.1rem; line-height: 1; cursor: pointer; display: none; transform: rotate(0deg); transition: transform 0.2s ease, color 0.2s ease; }
+      #blog .close-btn:hover { transform: rotate(90deg); color: var(--blog-accent); }
+      #blog .blog-card.open .close-btn { display: inline-block; }
+      #blog .filter-wrap { margin-top: 1.1rem; margin-bottom: 0.8rem; position: sticky; top: 0; z-index: 5; background: linear-gradient(180deg, rgba(10, 14, 26, 0.96), rgba(10, 14, 26, 0.72)); padding: 0.45rem 0; backdrop-filter: blur(8px); }
+      #blog .filter-row { display: flex; gap: 0.55rem; flex-wrap: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; padding-bottom: 0.15rem; }
+      #blog .filter-row::-webkit-scrollbar { display: none; }
+      #blog .filter-pill { border: 1px solid var(--blog-border); background: transparent; color: var(--blog-text); padding: 0.38rem 0.72rem; border-radius: 999px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: background 0.2s ease, border-color 0.2s ease; }
+      #blog .filter-pill:hover { background: rgba(0, 212, 255, 0.2); }
+      #blog .filter-pill.active { background: var(--blog-accent); border-color: var(--blog-accent); color: #031724; font-weight: 700; }
+      #blog .articles-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+      #blog .grid-card { position: relative; overflow: hidden; }
+      #blog .grid-card::after { content: ""; position: absolute; inset: 0; background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), rgba(0, 212, 255, 0.18), transparent 60%); pointer-events: none; opacity: 0; transition: opacity 0.2s ease; }
+      #blog .grid-card:hover::after { opacity: 1; }
+      #blog .grid-card:hover { transform: translateY(-6px); border-color: rgba(0, 212, 255, 0.45); box-shadow: 0 0 24px rgba(0, 212, 255, 0.12), var(--blog-shadow); }
+      #blog .empty-state { margin: 1rem 0 0.6rem; min-height: 1.4rem; text-align: center; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--blog-success); opacity: 0; transition: opacity 0.22s ease; }
+      #blog .empty-state.show { opacity: 1; }
+      @media (max-width: 768px) {
+        body { padding: 1rem 0.65rem; }
+        #blog .blog-shell { padding: 0.95rem; }
+        #blog .blog-title-link { font-size: 1.15rem; }
+        #blog .featured .blog-title-link { font-size: 1.4rem; }
+        #blog .articles-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-nav">
+      <a href="./index.html">← Back to Portfolio</a>
+      <a href="./index.html#contact">Contact</a>
+    </div>
+    <section id="blog" class="blog-section">
+      <div class="blog-shell">
+        <h2 class="blog-title">Blog</h2>
+        <p class="blog-subtitle">Field notes from production, incidents, and reliability engineering.</p>
+        <article class="blog-card featured open grid-card" data-category="career observability aws">
+          <div class="reading-progress"><span></span></div>
+          <div class="blog-card-inner">
+            <div class="meta-row">
+              <span class="category-tag">Career · Observability</span>
+              <div style="display:flex;align-items:center;gap:.55rem;">
+                <span class="new-badge">NEW</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+            </div>
+            <h3 class="blog-title-link">What on-call taught me that no course ever could</h3>
+            <p class="blog-summary">Your first pager alert at 3 AM changes how you think about reliability forever.</p>
+            <div class="blog-controls">
+              <button class="blog-btn toggle-article">Read More</button>
+              <button class="close-btn close-article" aria-label="Close article">×</button>
+            </div>
+            <div class="blog-expand">
+              <div class="blog-article-content">
+                <p>"Your first pager alert hits different when it's 3 AM, the escalation channel is going off, and someone is waiting on you. No lab environment prepared me for that feeling."</p>
+                <p>I had gone through the internal documentation and built things in sandbox accounts. I understood the concepts. But the first time I was handed on-call responsibilities, I realized there’s a version of this work that only exists in production — and you only learn it by being there.</p>
+                <p>A production alert came through. Services were degrading. I jumped into Splunk but didn't know what I was looking for. I had access to everything and visibility into nothing.</p>
+                <p>I pulled up Datadog, found a synthetic monitor failing on a stable endpoint, cross-referenced the timestamps in Splunk, and traced it back to a deployment from hours earlier. We resolved it.</p>
+                <p>But what stuck with me wasn't the fix — it was everything that happened before it.</p>
+                <p>Here's what on-call actually teaches you:</p>
+                <ul>
+                  <li>Calm is a skill. The engineers who resolve incidents fastest aren't the ones who know the most — they slow down while everyone else spirals.</li>
+                  <li>Learn your tools before the incident. The worst time to learn Splunk or Datadog is during an outage.</li>
+                  <li>Runbooks are a love letter to your future self. 3 AM — you deserve better than starting from scratch.</li>
+                  <li>Escalation is not failure. Knowing when — and how — to pull someone in is an underrated skill.</li>
+                  <li>The pager doesn't care about your certifications. It only cares whether you show up.</li>
+                </ul>
+                <p>What did your first on-call rotation teach you? Drop it in the comments.</p>
+                <p>#DevOps #SRE #OnCall #CloudEngineering #AWS #IncidentResponse #CareerGrowth</p>
+                <div class="article-sentinel" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <div class="filter-wrap">
+          <div class="filter-row">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="aws">AWS</button>
+            <button class="filter-pill" data-filter="ci-cd">CI/CD</button>
+            <button class="filter-pill" data-filter="observability">Observability</button>
+            <button class="filter-pill" data-filter="career">Career</button>
+          </div>
+        </div>
+        <div class="articles-grid" id="blog-grid">
+          <article class="blog-card grid-card" data-category="aws observability career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">AWS · Career</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">The Most Expensive Word in Cloud Engineering: “Later”</h3>
+              <p class="blog-summary">Most cloud incidents begin as “we’ll fix it later.” Debt compounds silently until reliability, signal quality, and cost all degrade together.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>One thing I’ve learned working in DevOps/SRE is that cloud problems rarely begin as real emergencies.</p>
+                  <p>Most of them start with: “We’ll fix it later.”</p>
+                  <p>Later becomes:</p>
+                  <ul>
+                    <li>hundreds of unused CloudWatch alarms</li>
+                    <li>old ECS task definitions nobody touches</li>
+                    <li>patching that keeps getting postponed</li>
+                    <li>IAM roles nobody reviews anymore</li>
+                    <li>“temporary” resources that somehow survive for years</li>
+                  </ul>
+                  <p>None of these things breaks production immediately. That’s exactly why they become dangerous.</p>
+                  <p>I once worked on cleaning up stale infrastructure resources across multiple AWS environments. At first glance, nothing looked critical. Systems were healthy, deployments were working, and the platform seemed stable.</p>
+                  <p>But over time, the effects started showing up everywhere:</p>
+                  <ul>
+                    <li>Engineers ignored alerts because there were too many</li>
+                    <li>troubleshooting became slower</li>
+                    <li>dashboards became noisy</li>
+                    <li>Cloud costs slowly increased month after month</li>
+                  </ul>
+                  <p>The hardest part wasn’t deleting old resources. It was figuring out what still mattered, what had dependencies, and what nobody actually owned anymore.</p>
+                  <p>That experience changed how I think about infrastructure engineering. Technical debt in cloud environments compounds silently. Small operational shortcuts eventually become reliability problems.</p>
+                  <p>Reliability isn’t only about uptime. It’s also about keeping systems understandable before complexity becomes production risk.</p>
+                  <p>#SRE #DevOps #Cloud #AWS</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="aws observability career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">AWS · Observability</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">US-EAST-1 Outage Lesson: Redundancy Isn’t Recoverability</h3>
+              <p class="blog-summary">High availability diagrams are easy. Recoverability is hard — especially after failover, when hidden dependencies surface fast.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>Last week’s Amazon Web Services (AWS) US-EAST-1 outage exposed something a lot of DevOps and SRE teams already know: High availability diagrams are easy. Recoverability is hard.</p>
+                  <p>A thermal event inside an AWS data center in Northern Virginia disrupted EC2 and EBS services in one of the world’s most heavily used cloud regions. Companies relying on single-region assumptions suddenly had to test whether their “resilient” architecture actually worked under real pressure.</p>
+                  <p>What stood out to me wasn’t the outage itself. It was how many systems were technically redundant, but operationally unprepared.</p>
+                  <p>I learned this during one of our AWS disaster recovery exercises, where we tested Route53 failover and cross-region recovery procedures.</p>
+                  <p>On paper, everything looked ready:</p>
+                  <ul>
+                    <li>Secondary region infrastructure</li>
+                    <li>DNS failover policies</li>
+                    <li>Monitoring and synthetic checks</li>
+                    <li>Recovery runbooks</li>
+                  </ul>
+                  <p>The failover worked. The difficult part came after traffic shifted.</p>
+                  <p>That’s when hidden operational problems started appearing:</p>
+                  <ul>
+                    <li>Applications still tied to regional dependencies</li>
+                    <li>Dashboards no longer reflect reality</li>
+                    <li>Authentication behaves differently after a failover</li>
+                    <li>Downstream integrations are recovering inconsistently</li>
+                    <li>Manual validation steps are slowing recovery confidence</li>
+                  </ul>
+                  <p>That experience changed how I think about cloud resilience.</p>
+                  <p>In modern cloud engineering, redundancy alone is no longer enough. Multi-region AWS infrastructure, Kubernetes clusters, and distributed systems all increase operational complexity.</p>
+                  <p>Reliability engineering is no longer just about preventing outages. It’s about proving systems can recover safely when outages inevitably happen. A disaster recovery plan that has never been realistically tested is still theoretical infrastructure.</p>
+                  <p>Curious how other DevOps/SRE teams approach this: What’s usually the weakest part of DR testing in your environment today — observability, automation, or dependency validation?</p>
+                  <p>#DevOps #SRE #AWS #CloudEngineering #DisasterRecovery #Route53 #PlatformEngineering #ReliabilityEngineering #Kubernetes #CloudInfrastructure</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="aws ci-cd career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">CI/CD · AWS</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">When RHEL Patching Failed Quietly Across Environments</h3>
+              <p class="blog-summary">Kernel patching failed not with an outage, but with silent `/boot` saturation — and a lesson in environment parity and pre-patch guards.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>Patching broke across our RHEL fleet. Not with an explosion but with yum silently failing and /boot partitions sitting at 94-96% full.</p>
+                  <p>Routine kernel patch cycle. Rapid7 flagged a high-severity CVE; the SLA clock was ticking. Kicked off the Ansible playbook, came back to failed hosts across multiple environments.</p>
+                  <p>Buried in logs: “Installing package kernel-4.18.x would result in filling disk on /boot”</p>
+                  <p>RHEL’s default installonly_limit keeps up to 5 kernels. Our /boot partitions were 500MB. We ran four environment lifecycles — dev, QA, staging, and prod — patching consistently across all of them. Every cycle was quietly stacking another 100-200MB kernel image with nowhere to go.</p>
+                  <p>The fix was simple: <code>installonly_limit=2</code>. We rolled it out via Ansible across every RHEL host, cleaned old kernels with <code>package-cleanup --oldkernels --count=2</code>, and reran the patch cycle.</p>
+                  <p>But what mattered most: we caught it in dev and staging first — before prod. That’s why lower environments must run the same patch cadence and OS workflow as production.</p>
+                  <p>After resolving it, we added a pre-patch assertion: if /boot has less than 200MB free, clean old kernels first, then patch. Silent mid-cycle failures stopped completely.</p>
+                  <p>The irony: disciplined patching created the very condition blocking future patching because installonly_limit wasn’t explicitly managed.</p>
+                  <p>If you manage RHEL at scale and haven’t set this, check /boot utilization across all environments now — not just prod.</p>
+                  <p>#RHEL #Linux #OS #DevOps #SRE #Patching #Kernel #AWS</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+        <p class="empty-state" id="blog-empty"></p>
+      </div>
+    </section>
+    <script>
+      (function () {
+        const section = document.getElementById("blog");
+        const cards = [...section.querySelectorAll(".blog-card")];
+        const filterPills = [...section.querySelectorAll(".filter-pill")];
+        const emptyEl = section.querySelector("#blog-empty");
+        let openCard = section.querySelector(".blog-card.open") || null;
+        let emptyTypingTimer = null;
+
+        function countWords(text) { return (text.trim().match(/\S+/g) || []).length; }
+        function setReadTimes() {
+          cards.forEach((card) => {
+            const content = card.querySelector(".blog-article-content");
+            const readEl = card.querySelector(".readtime-text");
+            if (!content || !readEl) return;
+            const mins = Math.max(1, Math.ceil(countWords(content.innerText) / 200));
+            readEl.textContent = mins + " min read";
+          });
+        }
+        function closeCard(card) {
+          if (!card) return;
+          card.classList.remove("open");
+          const btn = card.querySelector(".toggle-article");
+          if (btn) btn.textContent = "Read More";
+        }
+        function openCardFn(card) {
+          if (!card) return;
+          if (openCard && openCard !== card) closeCard(openCard);
+          card.classList.add("open");
+          const btn = card.querySelector(".toggle-article");
+          if (btn) btn.textContent = "Read Less";
+          openCard = card;
+          card.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        cards.forEach((card) => {
+          const toggle = card.querySelector(".toggle-article");
+          const closeBtn = card.querySelector(".close-article");
+          if (toggle) toggle.addEventListener("click", () => card.classList.contains("open") ? (closeCard(card), openCard = openCard === card ? null : openCard) : openCardFn(card));
+          if (closeBtn) closeBtn.addEventListener("click", () => { closeCard(card); if (openCard === card) openCard = null; });
+        });
+        function typeEmptyMessage(text) {
+          clearInterval(emptyTypingTimer);
+          emptyEl.textContent = "";
+          let i = 0;
+          emptyEl.classList.add("show");
+          emptyTypingTimer = setInterval(() => {
+            emptyEl.textContent = text.slice(0, i + 1);
+            i += 1;
+            if (i >= text.length) clearInterval(emptyTypingTimer);
+          }, 26);
+        }
+        function applyFilter(filter) {
+          let visible = 0;
+          cards.forEach((card) => {
+            const categories = (card.dataset.category || "").toLowerCase();
+            const match = filter === "all" || categories.includes(filter);
+            card.classList.toggle("filtered-out", !match);
+            if (match) visible += 1;
+          });
+          if (visible === 0) typeEmptyMessage("> no posts found matching query");
+          else { emptyEl.classList.remove("show"); emptyEl.textContent = ""; }
+        }
+        filterPills.forEach((pill) => pill.addEventListener("click", () => {
+          filterPills.forEach((p) => p.classList.toggle("active", p === pill));
+          applyFilter((pill.dataset.filter || "all").toLowerCase());
+        }));
+        section.querySelectorAll(".grid-card").forEach((card) => {
+          card.addEventListener("mousemove", (e) => {
+            const r = card.getBoundingClientRect();
+            card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+            card.style.setProperty("--my", (e.clientY - r.top) + "px");
+          });
+        });
+        const sentinels = [...section.querySelectorAll(".article-sentinel")];
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            const card = entry.target.closest(".blog-card");
+            if (!card) return;
+            const progressEl = card.querySelector(".reading-progress > span");
+            if (!progressEl) return;
+            if (entry.isIntersecting && card.classList.contains("open")) progressEl.style.width = "100%";
+          });
+        }, { root: null, threshold: 0.95 });
+        sentinels.forEach((s) => observer.observe(s));
+        function updateOpenProgress() {
+          if (!openCard) return;
+          const content = openCard.querySelector(".blog-article-content");
+          const bar = openCard.querySelector(".reading-progress > span");
+          if (!content || !bar) return;
+          const rect = content.getBoundingClientRect();
+          const vh = window.innerHeight;
+          const total = Math.max(1, rect.height + vh * 0.6);
+          const traveled = Math.min(total, Math.max(0, vh * 0.65 - rect.top));
+          const pct = Math.max(0, Math.min(100, (traveled / total) * 100));
+          bar.style.width = pct + "%";
+        }
+        window.addEventListener("scroll", updateOpenProgress, { passive: true });
+        window.addEventListener("resize", updateOpenProgress);
+        setReadTimes();
+        applyFilter("all");
+        updateOpenProgress();
+      })();
+    </script>
+  </body>
+</html>

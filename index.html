@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="mediaqueries.css" />
   </head>
   <body>
+    <div class="scroll-progress" id="scroll-progress"></div>
     <nav id="desktop-nav">
       <div class="logo">Usman Tahir Qureshi</div>
       <div>
@@ -16,7 +17,9 @@
           <li><a href="#about">About</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#projects">Projects</a></li>
+          <li><a href="./blog.html">Blog</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark and light theme">🌙</button></li>
         </ul>
       </div>
     </nav>
@@ -32,6 +35,7 @@
           <li><a href="#about" onclick="toggleMenu()">About</a></li>
           <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
           <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
+          <li><a href="./blog.html" onclick="toggleMenu()">Blog</a></li>
           <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
         </div>
       </div>
@@ -45,6 +49,11 @@
         <h1 class="title">Usman Tahir Qureshi</h1>
         <p class="section__text__p2">DevOps / Site Reliability Engineer</p>
         <p class="section__text__p3 ">Atlanta, GA</p>
+        <div class="hero-badges">
+          <span>AWS Platform Engineering</span>
+          <span>24/7 Incident Response</span>
+          <span>Zero-Downtime Delivery</span>
+        </div>
         <div class="btn-container">
           <button
             class="btn btn-color-2"
@@ -70,44 +79,67 @@
             onclick="location.href='https://github.com/UsmanQT'"
           />
         </div>
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <h3>2+</h3>
+            <p>Years Reliability Engineering</p>
+          </article>
+          <article class="metric-card">
+            <h3>5</h3>
+            <p>Major Infrastructure Initiatives</p>
+          </article>
+          <article class="metric-card">
+            <h3>0</h3>
+            <p>Downtime During Key Migrations</p>
+          </article>
+        </div>
+        <div class="sre-console">
+          <p class="console-title">Live SRE Console</p>
+          <p class="console-line"><span class="prompt">$</span> <span id="typed-command"></span><span class="cursor">|</span></p>
+          <p class="console-output" id="typed-output">Monitoring production systems...</p>
+        </div>
       </div>
     </section>
     <section id="about">
-      <p class="section__text__p1">Get To Know More</p>
-      <h1 class="title">About Me</h1>
-      <div class="section-container">
-        <div class="section__pic-container">
-          <img
-            src="./assets/about-pic.jpg"
-            alt="Profile picture"
-            class="about-pic"
-          />
-        </div>
-        <div class="about-details-container">
-          <div class="about-containers">
-            <div class="details-container">
-              <img
-                src="./assets/experience.png"
-                alt="Experience icon"
-                class="icon"
-              />
-              <h3>Experience</h3>
-              <p>2+ years <br />Site Reliability & DevOps <br />Cloud Infrastructure</p>
-            </div>
-            <div class="details-container">
-              <img
-                src="./assets/education.png"
-                alt="Education icon"
-                class="icon"
-              />
-              <h3>Education</h3>
-              <p>BS Computer Science<br />MS Applied Computer Science</p>
-            </div>
+      <div class="about-story-shell">
+        <div class="about-sticky">
+          <div class="about-terminal">
+            <span class="about-terminal-line" id="about-terminal-line"></span><span class="about-terminal-cursor">|</span>
           </div>
-          <div class="text-container">
-            <p>
-              Site Reliability Engineer with 2+ years of experience building and operating distributed applications on AWS across development and production environments. I have led zero-downtime upgrades for PostgreSQL and Redis, automated infrastructure rollouts via GitLab CI/CD, and strengthened reliability with proactive observability, incident response, and disaster recovery exercises. I bring a strong Linux and automation background with Python, Bash, AWS CDK, and CloudFormation.
-            </p>
+          <p class="section__text__p1">Get To Know More</p>
+          <h1 class="title">About Me</h1>
+          <div class="about-stats">
+            <article class="about-stat-card" id="stat-years-card">
+              <h3 id="years-counter">0</h3>
+              <p>Years</p>
+              <p>Site Reliability &amp; DevOps / Cloud Infrastructure</p>
+            </article>
+            <article class="about-stat-card">
+              <h3>Education</h3>
+              <p>BS Computer Science</p>
+              <p>MS Applied Computer Science</p>
+            </article>
+          </div>
+          <h2 class="about-operate-title" id="about-operate-title">How I Operate</h2>
+          <div class="about-pillars">
+            <article class="about-pillar-card">
+              <h3>Reliability</h3>
+              <p class="about-pillar-copy">
+                I design systems for uptime first. Clean runbooks, strong alert signal quality, safe change windows so upgrades and migrations happen without production disruption.
+              </p>
+            </article>
+            <article class="about-pillar-card">
+              <h3>Automation</h3>
+              <p class="about-pillar-copy">
+                I build dependable platforms with measurable operational outcomes.
+              </p>
+            </article>
+            <article class="about-pillar-card">
+              <h3>Collaboration</h3>
+              <p class="about-pillar-copy">
+                As a DevOps and Site Reliability Engineer, I focus on production resilience, automation, and observability. Delivered zero-downtime PostgreSQL and Redis upgrades, improved on-call response, and built stronger deployment guardrails for platform teams.
+              </p>
+            </article>
           </div>
         </div>
       </div>
@@ -127,7 +159,7 @@
             <h2 class="experience-sub-title">DevOps / Site Reliability Engineer</h2>
             <p><strong>Greensky LLC</strong> | March 2025 - April 2026 | Atlanta, GA</p>
             <br />
-            <p>
+            <p class="prose-reveal">
               Operated AWS infrastructure across production and development environments, managed distributed Aurora RDS PostgreSQL and Redis services, automated rollouts with GitLab CI/CD, and drove reliability improvements through on-call incident response, root cause analysis, and DR exercises.
             </p>
           </div>
@@ -135,13 +167,18 @@
             <h2 class="experience-sub-title">Research Scientist (Software Engineer)</h2>
             <p><strong>Grand Valley State University</strong> | Feb 2024 - March 2025 | Grand Rapids, MI</p>
             <br />
-            <p>
+            <p class="prose-reveal">
               Designed and deployed AWS infrastructure using CloudFormation, implemented CI/CD with GitHub Actions, and built AI-native application features including a retrieval-augmented chatbot integrated into the GVSU Laker mobile app.
             </p>
           </div>
         </div>
-        <div class="about-containers">
-          <div class="details-container sre-dominant">
+        <div class="skills-toggle" role="tablist" aria-label="Skill Categories">
+          <button class="skill-toggle-btn active" data-skill-view="all" role="tab" aria-selected="true">All Skills</button>
+          <button class="skill-toggle-btn" data-skill-view="reliability" role="tab" aria-selected="false">Reliability Focus</button>
+          <button class="skill-toggle-btn" data-skill-view="software" role="tab" aria-selected="false">Software Focus</button>
+        </div>
+        <div class="about-containers skills-grid">
+          <div class="details-container sre-dominant skills-panel" data-skill-category="reliability">
             <h2 class="experience-sub-title">Platform Reliability Engineering</h2>
             <div class="article-container">
               <article>
@@ -300,7 +337,7 @@
               </article>
             </div>
           </div>
-          <div class="details-container">
+          <div class="details-container skills-panel" data-skill-category="software">
             <h2 class="experience-sub-title">Software Development</h2>
             <div class="article-container">
               <article>
@@ -438,6 +475,53 @@
             </div>
           </div>
         </div>
+        <div class="experience-lab">
+          <div class="experience-chart-panel">
+            <div class="panel-header">
+              <h2>Reliability Impact Chart</h2>
+              <p>Hands-on impact across your recent platform initiatives.</p>
+            </div>
+            <div class="impact-chart">
+              <div class="impact-row">
+                <span class="impact-label">Zero-Downtime Upgrades</span>
+                <div class="impact-track"><span class="impact-fill" data-value="96"></span></div>
+                <span class="impact-value">96%</span>
+              </div>
+              <div class="impact-row">
+                <span class="impact-label">Incident MTTR Improvements</span>
+                <div class="impact-track"><span class="impact-fill" data-value="88"></span></div>
+                <span class="impact-value">88%</span>
+              </div>
+              <div class="impact-row">
+                <span class="impact-label">Infrastructure Automation</span>
+                <div class="impact-track"><span class="impact-fill" data-value="92"></span></div>
+                <span class="impact-value">92%</span>
+              </div>
+              <div class="impact-row">
+                <span class="impact-label">Observability Modernization</span>
+                <div class="impact-track"><span class="impact-fill" data-value="84"></span></div>
+                <span class="impact-value">84%</span>
+              </div>
+            </div>
+          </div>
+          <div class="incident-game-panel">
+            <div class="panel-header">
+              <h2>Incident Response Simulator</h2>
+              <p>Fast reaction game inspired by on-call triage.</p>
+            </div>
+            <div class="incident-status-board">
+              <p id="incident-message">Press start to begin a 20-second incident shift.</p>
+              <div class="incident-stats">
+                <span>Score: <strong id="incident-score">0</strong></span>
+                <span>Time: <strong id="incident-time">20</strong>s</span>
+              </div>
+            </div>
+            <div class="incident-actions">
+              <button class="btn command-btn" id="incident-start">Start Shift</button>
+              <button class="btn command-btn" id="incident-resolve" disabled>Resolve Alert</button>
+            </div>
+          </div>
+        </div>
       </div>
       <img
         src="./assets/arrow.png"
@@ -449,9 +533,15 @@
     <section id="projects">
       <p class="section__text__p1">Highlighted Resume</p>
       <h1 class="title">Projects</h1>
+      <div class="project-filters" role="tablist" aria-label="Project Filters">
+        <button class="project-filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="project-filter-btn" data-filter="reliability" role="tab" aria-selected="false">Reliability</button>
+        <button class="project-filter-btn" data-filter="platform" role="tab" aria-selected="false">Platform</button>
+        <button class="project-filter-btn" data-filter="application" role="tab" aria-selected="false">Application</button>
+      </div>
       <div class="experience-details-container">
         <div class="about-containers">
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="reliability platform">
             <div class="article-container">
               <img
                 src="./assets/project-aurora.svg"
@@ -462,7 +552,7 @@
             <h2 class="experience-sub-title project-title">Aurora PostgreSQL Major Version Upgrade</h2>
             <p class="project-summary">Orchestrated a zero-downtime major version upgrade for the Kong API Gateway PostgreSQL database across all lifecycle environments, including production cutover during maintenance windows without service disruption.</p>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="reliability platform">
             <div class="article-container">
               <img
                 src="./assets/project-redis.svg"
@@ -473,7 +563,7 @@
             <h2 class="experience-sub-title project-title">ElastiCache Redis Fleet Modernization</h2>
             <p class="project-summary">Executed rolling Redis replication-group upgrades from v5 to v7 across every environment, using staged node replacement and continuous validation to maintain zero downtime.</p>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="reliability platform">
             <div class="article-container">
               <img
                 src="./assets/project-rundeck.svg"
@@ -484,7 +574,7 @@
             <h2 class="experience-sub-title project-title">Rundeck Migration + GitLab Pipeline Integration</h2>
             <p class="project-summary">Migrated MySQL schemas, upgraded Rundeck v3 to v5, completed DNS cutover with no production downtime, and re-architected operational jobs into version-controlled GitLab pipelines.</p>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="reliability platform">
             <div class="article-container">
               <img
                 src="./assets/project-snowflake.svg"
@@ -495,7 +585,7 @@
             <h2 class="experience-sub-title project-title">Snowflake Security Logging Pipeline</h2>
             <p class="project-summary">Built an end-to-end ingestion pipeline for Snowflake authentication events, enabling clear, tagged, and reliably routed security telemetry for downstream monitoring.</p>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="reliability platform">
             <div class="article-container">
               <img
                 src="./assets/project-cdk.svg"
@@ -506,7 +596,7 @@
             <h2 class="experience-sub-title project-title">S3 Bucket Fleet Migration to CDK</h2>
             <p class="project-summary">Contributed to an internal CDK library and migrated S3 buckets across lifecycles into a standardized Bucket Manager framework, improving governance and consistency.</p>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="application">
             <div class="article-container">
               <img
                 src="./assets/project-1.png"
@@ -530,7 +620,7 @@
               </button>
             </div>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="application">
             <div class="article-container">
               <img
                 src="./assets/project-2.png"
@@ -554,7 +644,7 @@
               </button>
             </div>
           </div>
-          <div class="details-container color-container">
+          <div class="details-container color-container project-card" data-project-type="application">
             <div class="article-container">
               <img
                 src="./assets/project-3.png"
@@ -579,6 +669,58 @@
             </div>
           </div>
         </div>
+      </div>
+      <img
+        src="./assets/arrow.png"
+        alt="Arrow icon"
+        class="icon arrow"
+        onclick="location.href='./#contact'"
+      />
+    </section>
+    <section id="blog" class="blog-preview">
+      <p class="section__text__p1">Recent Writing</p>
+      <h1 class="title">Blog</h1>
+      <div class="blog-preview-grid">
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">Featured · Career</p>
+          <h3>What on-call taught me that no course ever could</h3>
+          <p>
+            Your first pager alert at 3 AM changes how you think about reliability forever. Lessons from real incidents, not sandbox exercises.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">AWS · Career</p>
+          <h3>The Most Expensive Word in Cloud Engineering: “Later”</h3>
+          <p>
+            How “we’ll fix it later” becomes alert fatigue, cloud cost creep, and hidden reliability risk across production environments.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">AWS · Observability</p>
+          <h3>US-EAST-1 Outage Lesson: Redundancy Isn’t Recoverability</h3>
+          <p>
+            Multi-region architecture is only half the story; real resilience starts after failover when operational dependencies surface.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">CI/CD · Linux</p>
+          <h3>When RHEL Patching Failed Quietly Across Environments</h3>
+          <p>
+            A kernel retention issue quietly blocked CVE patching until pre-patch `/boot` checks and lifecycle parity fixed the workflow.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">More Writing</p>
+          <h3>Read more articles</h3>
+          <p>
+            Explore the full collection of posts on reliability engineering, AWS operations, observability, incident response, and platform delivery.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Open Full Blog</a>
+        </article>
       </div>
       <img
         src="./assets/arrow.png"
@@ -616,6 +758,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="./blog.html">Blog</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
