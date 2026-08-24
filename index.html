@@ -714,6 +714,70 @@
           <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
         </article>
         <article class="blog-preview-card">
+          <p class="blog-preview-tag">CI/CD · Kubernetes</p>
+          <h3>We updated the ConfigMap. The app had no idea.</h3>
+          <p>
+            Env vars from a ConfigMap are injected at pod startup — Kubernetes won't push updates into running containers. File mounts do update automatically. Same resource, completely different behavior.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">AWS · ECS · Observability</p>
+          <h3>It wasn't an app crash — ECS was silently OOM-killing it</h3>
+          <p>
+            Clean exits, no errors, automatic restarts — but ECS kills from outside the process and leaves no evidence inside it. Two task definition fields set identically was all it took.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">CI/CD · Terraform</p>
+          <h3>The Terraform apply that locked us out</h3>
+          <p>
+            One cancelled pipeline job never released its state lock. Twenty minutes later, the whole team was blocked from deploying anything — including the hotfix that started it all.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">AWS · Platform Engineering</p>
+          <h3>Moving 1.8 billion S3 objects without anyone noticing</h3>
+          <p>
+            S3 replication works. Knowing when 1.8 billion objects actually finished — and closing the old pipe before it silently corrupts the new bucket — is the hard part.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">CI/CD · Security</p>
+          <h3>The CVE that was already fixed, but kept getting flagged</h3>
+          <p>
+            We patched it three times and it kept coming back — because floating Docker tags meant the image scanned and the image running were never actually the same bytes.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">CI/CD · Kubernetes</p>
+          <h3>The rolling deploy that took down everything at once</h3>
+          <p>
+            Pipeline green, staging clean — and the service went completely dark. Two unset fields and Kubernetes defaults that don't guarantee what their name implies.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">AWS · Security</p>
+          <h3>One open endpoint. Full AWS access.</h3>
+          <p>
+            IMDSv1 sits enabled by default on EC2 instances with no auth required — the same vector that exposed 100 million Capital One records. One command fixes it.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
+          <p class="blog-preview-tag">AWS · IAM · Security</p>
+          <h3>Least privilege sounds simple. At scale it quietly breaks everything.</h3>
+          <p>
+            Nobody grants wildcards maliciously. They happen at 4 PM on a Friday before a release — and IAM Access Analyzer plus SCPs are what contain the blast radius.
+          </p>
+          <a class="blog-preview-link" href="./blog.html">Read Full Article</a>
+        </article>
+        <article class="blog-preview-card">
           <p class="blog-preview-tag">More Writing</p>
           <h3>Read more articles</h3>
           <p>

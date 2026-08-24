@@ -75,6 +75,7 @@
       #blog .blog-article-content p { margin: 0.65rem 0; }
       #blog .blog-article-content ul { margin: 0.6rem 0 0.75rem 1.1rem; color: #d8e3f2; }
       #blog .blog-article-content li { margin: 0.35rem 0; }
+      #blog .blog-article-content pre { background: rgba(0,0,0,0.45); border: 1px solid var(--blog-border); border-radius: 8px; padding: 0.75rem 1rem; margin: 0.75rem 0; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; color: #a8ffdd; line-height: 1.6; }
       #blog .blog-controls { display: flex; gap: 0.5rem; margin-top: 0.7rem; align-items: center; }
       #blog .blog-btn { border: 1px solid var(--blog-border); background: rgba(0, 212, 255, 0.1); color: var(--blog-text); padding: 0.44rem 0.7rem; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.82rem; }
       #blog .close-btn { margin-left: auto; background: transparent; border: 0; color: var(--blog-muted); font-size: 1.1rem; line-height: 1; cursor: pointer; display: none; transform: rotate(0deg); transition: transform 0.2s ease, color 0.2s ease; }
@@ -156,6 +157,7 @@
             <button class="filter-pill" data-filter="ci-cd">CI/CD</button>
             <button class="filter-pill" data-filter="observability">Observability</button>
             <button class="filter-pill" data-filter="career">Career</button>
+            <button class="filter-pill" data-filter="security">Security</button>
           </div>
         </div>
         <div class="articles-grid" id="blog-grid">
@@ -243,6 +245,298 @@
                   <p>Reliability engineering is no longer just about preventing outages. It’s about proving systems can recover safely when outages inevitably happen. A disaster recovery plan that has never been realistically tested is still theoretical infrastructure.</p>
                   <p>Curious how other DevOps/SRE teams approach this: What’s usually the weakest part of DR testing in your environment today — observability, automation, or dependency validation?</p>
                   <p>#DevOps #SRE #AWS #CloudEngineering #DisasterRecovery #Route53 #PlatformEngineering #ReliabilityEngineering #Kubernetes #CloudInfrastructure</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="aws security">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">AWS · Security</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">One open endpoint. Full AWS access.</h3>
+              <p class="blog-summary">IMDSv1 is enabled on EC2 instances by default. No auth, no token. Any process on the instance can walk away with your IAM credentials — and that's exactly how the Capital One breach worked.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>No CVE. No zero-day. Just a default that nobody changed.</p>
+                  <p>IMDSv1 is enabled on EC2 instances by default. No authentication, no headers, no token. Any process on the instance — including any container running on it — can query the metadata endpoint and walk away with the IAM credentials attached to that instance. Whatever that role can do in your AWS account, so can they.</p>
+                  <p>The reason this matters more than most default misconfigurations is the blast radius. It's not a single resource at risk. It's every S3 bucket, every RDS instance, every secret, every service that IAM role has access to. One vulnerable application on one instance is the entire surface.</p>
+                  <p>This is exactly how the Capital One breach worked in 2019. An SSRF vulnerability in an application forced it to fetch credentials from the metadata endpoint. IMDSv1 handed them over without question. Over 100 million records followed.</p>
+                  <p>IMDSv2 requires a session token before returning anything. That token has to be requested through a PUT call with a specific header — something a basic SSRF cannot do. The metadata endpoint becomes unreachable to anything that doesn't explicitly know how to ask for it correctly.</p>
+                  <pre>aws ec2 modify-instance-metadata-defaults \
+  --http-tokens required</pre>
+                  <p>That one command enforces IMDSv2 across every new instance in the account. Nothing visible breaks. Applications that call the metadata endpoint correctly keep working. The attack surface disappears.</p>
+                  <p>IMDSv1 doesn't announce itself. It doesn't generate alerts. It just sits there, enabled by default, waiting. The only way to know your exposure is to check.</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="aws security career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">AWS · IAM · Security</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">Least privilege sounds simple. At scale it quietly breaks everything.</h3>
+              <p class="blog-summary">Nobody grants wildcards maliciously. They happen at 4 PM on a Friday before a release. Here's how IAM Access Analyzer and SCPs contain the blast radius when least privilege fails.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>Every AWS security guide says the same thing. Grant only the permissions a service needs. Nothing more. It's one of the first principles you learn and one of the hardest to actually maintain as an organization grows.</p>
+                  <p>Here's what least privilege looks like in theory:</p>
+                  <pre>{
+  "Effect": "Allow",
+  "Action": ["s3:GetObject"],
+  "Resource": "arn:aws:s3:::my-bucket/*"
+}</pre>
+                  <p>Clean. Scoped. Intentional.</p>
+                  <p>Here's what it looks like six months into a growing engineering org:</p>
+                  <pre>{
+  "Effect": "Allow",
+  "Action": ["s3:*"],
+  "Resource": "*"
+}</pre>
+                  <p>Nobody made that change maliciously. It happened because a developer needed access to a new bucket at 4 PM on a Friday before a release. The path of least resistance was a wildcard. The ticket got closed. The permission stayed.</p>
+                  <p>This is the core problem with least privilege at scale. It isn't a technical failure. It's an organizational one.</p>
+                  <p>Every time a team hits a permissions boundary during development, they have two options. File a request, wait for it to be reviewed, get the specific permission added, and continue. Or ask for something broader that covers this case and probably the next three. One of those options ships the feature today. The other one ships it next week.</p>
+                  <p>IAM Access Analyzer tells you what permissions a role actually used over a trailing period:</p>
+                  <pre>aws accessanalyzer list-findings \
+  --analyzer-arn arn:aws:access-analyzer:us-east-1:123456789012:analyzer/my-analyzer</pre>
+                  <p>That surfaces unused permissions across your account automatically. Not what you think a role needs — what it demonstrably used. That's the difference between an IAM policy written by intuition and one written by evidence.</p>
+                  <p>Service Control Policies at the AWS Organizations level put a ceiling on what any role in an account can do regardless of what's in the role policy itself. Even if a wildcard slips through, an SCP can prevent the most dangerous actions from ever being callable in that account:</p>
+                  <pre>{
+  "Effect": "Deny",
+  "Action": [
+    "iam:CreateUser",
+    "iam:AttachRolePolicy"
+  ],
+  "Resource": "*"
+}</pre>
+                  <p>The SCP doesn't replace least privilege. It contains the blast radius when least privilege fails, which it will.</p>
+                  <p>At scale, least privilege is an engineering problem disguised as a security principle.</p>
+                  <p>#AWS #IAM #CloudSecurity #DevOps #SRE #PlatformEngineering #CloudEngineering</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="aws observability career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">AWS · Platform Engineering</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">Moving 1.8 billion S3 objects without anyone noticing</h3>
+              <p class="blog-summary">S3 replication is mature and well documented. The hard part is knowing when 1.8 billion objects actually finished landing — and remembering to close the pipe before the old bucket silently corrupts the new one.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>We needed existing S3 buckets brought under management by a bucket manager CDK library, standardizing lifecycle policies, encryption, and access controls org-wide. The library expected to manage buckets it created, not ones already holding billions of objects. The path forward was new buckets, with everything moved over using S3 replication.</p>
+                  <p>At that scale, the risk wasn't whether replication would work — it's mature and well documented. The risk was knowing when it was actually done, and what stayed dangerous even after it was.</p>
+                  <pre>aws s3control get-bucket-replication \
+  --account-id 123456789012 \
+  --bucket source-bucket-name</pre>
+                  <p>That command confirms replication is configured. It doesn't tell you how many of 1.8 billion objects actually landed on the other side. For that, we relied on daily S3 Inventory reports on both buckets, diffing object counts and total size until they converged. <code>aws s3 ls</code> won't get you there — it times out long before it counts that high.</p>
+                  <p>The real danger wasn't cutover itself — it was what kept running after it. Once apps started writing to the new bucket, the old replication rule was still active unless removed. Anything still touching the old bucket, intentionally or not, would get pushed into the new bucket and silently overwrite what the app had just written. You could cut over cleanly and still get corrupted afterward, because the pipe was never closed.</p>
+                  <p>The fix was making replication removal part of the cutover sequence itself, not cleanup done later once things looked stable.</p>
+                  <p>The hardest part wasn't technical. A bucket at this scale is load-bearing for more systems than anyone has fully mapped, and the person running the migration owns every one of those dependencies — including the one that quietly outlives its purpose.</p>
+                  <p>The real question isn't how to replicate the data. It's how you'll know every object made it, and what stops the old bucket from reaching back into the new one after you've moved on.</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="aws observability">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">AWS · ECS · Observability</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">It wasn't an app crash — ECS was silently OOM-killing it</h3>
+              <p class="blog-summary">Clean exits, no stack trace, automatic restarts. The app looked healthy right up until it disappeared. The real culprit was two task definition fields set to the same value — and ECS kills from outside the process, leaving no evidence inside it.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>The application team kept reporting intermittent crashes. Logs showed the process terminating cleanly. No exception, no stack trace, just a clean exit. Restarts were automatic, so most users never noticed. But the pattern was consistent enough that it couldn't be ignored.</p>
+                  <p>We started in the application code. Nothing. Checked dependencies. Nothing. The app looked completely healthy right up until it didn't exist anymore.</p>
+                  <p>The actual problem was two lines in the task definition:</p>
+                  <pre>"memory": 512,
+"memoryReservation": 512</pre>
+                  <p>Both set to the same value. That's the trap.</p>
+                  <p><code>memoryReservation</code> is a soft limit. The container is guaranteed that much but can burst above it if the host has headroom. <code>memory</code> is a hard ceiling. The moment the container crosses it, ECS kills the process. No warning. No OOM error in application logs — because the kill comes from outside the process entirely. From the app's perspective, nothing went wrong. It just stopped.</p>
+                  <p>The way to confirm it isn't a code issue:</p>
+                  <pre>aws logs filter-log-events \
+  --log-group-name /ecs/your-service \
+  --filter-pattern "OutOfMemoryError OR signal: killed"</pre>
+                  <p>Then check CloudWatch Container Insights. If <code>MemoryUtilized</code> is consistently bumping the hard limit during peak load, that's your answer.</p>
+                  <p>We set <code>memory</code> to 1024 and kept <code>memoryReservation</code> at 512. Clean exits stopped immediately.</p>
+                  <p>The broader point: when a container restarts with no application-level error, check memory before you check code. ECS will kill a container without leaving any evidence inside the container itself — which is exactly why it looks like the app is crashing when it isn't.</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="ci-cd observability">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">CI/CD · Kubernetes</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">We updated the ConfigMap. The app had no idea.</h3>
+              <p class="blog-summary">The ConfigMap was correct. The app was wrong. Environment variables are injected at pod startup — Kubernetes doesn't push updates into running containers. And if you mount the same ConfigMap as a file volume, it does update automatically. Same resource, two completely different behaviors.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>We pushed a config change. I updated the ConfigMap, verified it in the cluster, and moved on. Fifteen minutes later, the app was still running on the old value.</p>
+                  <p>No error. No warning. The ConfigMap was correct. The app was wrong.</p>
+                  <p>When you source a ConfigMap into a pod as environment variables, those values are injected at pod startup. Kubernetes does not watch for changes and push updates into running containers. The pod has no idea the ConfigMap changed.</p>
+                  <p>What makes this worse: if you mount the same ConfigMap as a file volume, it does update automatically after a short delay. Same ConfigMap, two different ways to consume it, completely different behavior. Nothing in your manifest warns you about this.</p>
+                  <p>The fix is simple:</p>
+                  <pre>kubectl rollout restart deployment/your-app -n your-namespace</pre>
+                  <p>After every ConfigMap change. That's it.</p>
+                  <p>The broader lesson: Kubernetes being declarative about desired state doesn't mean changes propagate the way you expect. Two things can both look correct in the cluster while your app runs on stale config.</p>
+                  <p>If you changed a ConfigMap and didn't restart the pods, you didn't deploy the change. You scheduled it for the next restart.</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="ci-cd career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">CI/CD · Terraform</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">The Terraform apply that locked us out</h3>
+              <p class="blog-summary">A cancelled CI job never released its DynamoDB state lock. Twenty minutes later, nobody on the team could deploy anything — not the hotfix, not a rollback, not an unrelated change in any other service.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>A deploy pipeline got cancelled mid-run. Somebody pushed a hotfix, the CI job kicked off a Terraform apply, and before it finished, the pipeline was manually cancelled to push a different change instead. Routine enough. Nobody thought twice about it.</p>
+                  <p>Twenty minutes later, every Terraform apply across every environment started failing with the same error:</p>
+                  <pre>Error: Error acquiring the state lock
+Lock Info:
+  ID:        a3f29d61-8e22-4f91-b8d3-1c9e7f4a2b55
+  Path:      env:/prod/terraform.tfstate
+  Operation: OperationTypeApply
+  Who:       gitlab-runner@ci-node-03
+  Created:   2026-01-14 09:42:11 UTC</pre>
+                  <p>The cancelled job never released its DynamoDB state lock. Terraform locks state before any write to prevent concurrent modifications from corrupting it — that part worked exactly as designed. The problem was that "cancelled" isn't the same as "finished," and nothing forced the lock release on interrupt.</p>
+                  <p>For the next twenty minutes, nobody could deploy anything. Not the hotfix. Not the rollback. Not any unrelated change to any other service sharing that backend. A single interrupted pipeline run had taken down deploys for the entire team.</p>
+                  <p>The immediate fix was manual:</p>
+                  <pre>terraform force-unlock a3f29d61-8e22-4f91-b8d3-1c9e7f4a2b55</pre>
+                  <p>But force-unlocking blind is its own risk. If the original apply was actually still running somewhere — in a half-finished state — force-unlocking and reapplying on top of it could corrupt state for real. Before running it, we had to confirm the original CI job was actually dead, not just cancelled in GitLab's UI while still executing on the runner:</p>
+                  <pre>ps aux | grep terraform</pre>
+                  <p>No process was alive on the runner node. Only then did we force-unlock.</p>
+                  <p>The longer-term fix was two changes to the pipeline. First, a guard step before every apply that checks for an existing lock and fails fast with a clear message instead of hanging:</p>
+                  <pre>before_script:
+  - terraform state pull > /dev/null || (echo "State locked or unreachable" && exit 1)</pre>
+                  <p>Second, and more importantly, removing the ability to manually cancel an apply job mid-run from the CI interface entirely. If a job needs to be stopped, it should run to completion or fail cleanly — not get killed in a state where it can't clean up after itself.</p>
+                  <p>The incident wasn't really about DynamoDB or Terraform internals. It was about a pipeline that let a person interrupt an operation that wasn't safe to interrupt, and no safeguard caught that gap until it took down the whole team's ability to ship.</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="ci-cd security">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">CI/CD · Security</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">The CVE that was already fixed, but kept getting flagged</h3>
+              <p class="blog-summary">We patched it, rebuilt it, redeployed it. Same CVE came back three times — because floating tags mean the image scanned and the image running were never actually the same bytes.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>A critical CVE showed up in Prisma Cloud against one of our services. We patched it, rebuilt it, and redeployed it. The next scan: same CVE, same severity, same service. We patched it again. It came back again.</p>
+                  <p>Three cycles of this before anyone questioned whether we were actually patching what was running in production.</p>
+                  <p>The Dockerfile looked completely reasonable:</p>
+                  <pre>FROM node:18-alpine</pre>
+                  <p><code>node:18-alpine</code> is a floating tag. It doesn't point to one fixed image — it points to whatever the maintainers most recently pushed under that tag. Every time we rebuilt, Docker pulled whatever <code>18-alpine</code> resolved to at that moment, which might or might not be the same underlying image as last week's build, or the one currently running in production.</p>
+                  <p>Here's the part that caused the loop. Prisma Cloud was scanning the image in our registry by tag. But the image actually deployed and running in the cluster had been pulled and cached on nodes days earlier, before the base image had shifted again upstream. The scan result and the running workload were, technically, two different images that happened to share the same tag.</p>
+                  <pre>docker inspect node:18-alpine --format='{{.RepoDigests}}'</pre>
+                  <p>Running that on the build host versus a running node showed two different digests under the identical tag. We were patching the version Prisma scanned, while a slightly different version — pulled earlier — kept running and kept getting flagged.</p>
+                  <p>The fix was pinning the base image to a digest instead of a tag:</p>
+                  <pre>FROM node:18-alpine@sha256:4f2c9b7a1e8d...</pre>
+                  <p>A digest points to one exact, immutable image. No drift, no ambiguity about what's actually deployed versus what got scanned. When the base image needed a real update, that became a deliberate change to the Dockerfile — reviewed like any other dependency bump — not something that happened silently on every rebuild.</p>
+                  <p>We also moved the CI pipeline to scan the image by digest after build, then deploy that exact digest, instead of deploying by tag and letting Kubernetes resolve it again at pull time on each node.</p>
+                  <p>The underlying lesson: a floating tag isn't a version, it's a moving target. Vulnerability scanning, build, and deployment all need to agree on the exact same artifact — not the same label pointing at three different things depending on when you ask.</p>
+                  <p>If a CVE keeps reopening after being patched, check whether the tag scanned and the image running are actually the same bytes. They might just be sharing a name.</p>
+                  <div class="article-sentinel" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card grid-card" data-category="ci-cd observability career">
+            <div class="reading-progress"><span></span></div>
+            <div class="blog-card-inner">
+              <div class="meta-row">
+                <span class="category-tag">CI/CD · Kubernetes</span>
+                <span class="readtime"><span class="clock-icon"></span><span class="readtime-text">-- min read</span></span>
+              </div>
+              <h3 class="blog-title-link">The rolling deploy that took down everything at once</h3>
+              <p class="blog-summary">Pipeline green. Staging clean. We walked away. Five minutes later the service was completely gone — because nobody had ever defined a rollout strategy and Kubernetes defaults don't guarantee safety.</p>
+              <div class="blog-controls">
+                <button class="blog-btn toggle-article">Read More</button>
+                <button class="close-btn close-article" aria-label="Close article">×</button>
+              </div>
+              <div class="blog-expand">
+                <div class="blog-article-content">
+                  <p>Routine deployment. Small change, tested in staging, pipeline green. We kicked it off and walked away.</p>
+                  <p>Five minutes later the service was completely down. Not degraded — gone. Every existing pod had been terminated before a single new one passed its health check.</p>
+                  <p>The culprit was two fields nobody had explicitly set. Our deployment had never defined a rollout strategy, which meant Kubernetes was running on defaults nobody had reviewed. At our replica count, those defaults allowed every pod to terminate simultaneously while replacements were still initializing.</p>
+                  <p>The fields that should have been there:</p>
+                  <pre>strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1</pre>
+                  <p>One pod down at a time. Each replacement has to pass its readiness probe before the next old one gets terminated. Slow, deliberate, zero surprise.</p>
+                  <p>A RollingUpdate strategy only rolls safely if the numbers enforce it. The name implies safety. The defaults don't guarantee it.</p>
+                  <p>Check every deployment in your cluster:</p>
+                  <pre>kubectl get deployments -A -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.strategy.rollingUpdate}{"\n"}{end}'</pre>
+                  <p>Any deployment returning null is running on defaults. Worth knowing before the next deploy, not after.</p>
                   <div class="article-sentinel" aria-hidden="true"></div>
                 </div>
               </div>
